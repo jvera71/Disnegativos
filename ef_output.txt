@@ -1,0 +1,3 @@
+Build started...
+Build succeeded.
+Unable to create a 'DbContext' of type 'DisnegativosDbContext'. The exception 'The dependent side could not be determined for the one-to-one relationship between 'MatchAction.ParentAction' and 'MatchAction.RelatedAction'. To identify the dependent side of the relationship, configure the foreign key property. If these navigations should not be part of the same relationship, configure them independently via separate method chains in 'OnModelCreating'. See https://go.microsoft.com/fwlink/?LinkId=724062 for more details.' was thrown while attempting to create an instance. For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728

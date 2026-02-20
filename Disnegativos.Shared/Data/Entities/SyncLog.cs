@@ -1,4 +1,4 @@
-using System;
+using Disnegativos.Shared.Enums;
 
 namespace Disnegativos.Shared.Data.Entities;
 
@@ -8,7 +8,7 @@ public class SyncLog
     public Guid Id { get; set; }
     public string TableName { get; set; } = string.Empty;
     public Guid RecordId { get; set; }
-    public int OperationType { get; set; } // 0=Insert, 1=Update, 2=Delete
+    public SyncOperation OperationType { get; set; } // Insert, Update, Delete
     public string? ChangedFields { get; set; } // JSON
     public DateTime Timestamp { get; set; }
     public bool IsSynced { get; set; }

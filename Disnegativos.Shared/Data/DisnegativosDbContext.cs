@@ -9,10 +9,10 @@ namespace Disnegativos.Shared.Data;
 
 public class DisnegativosDbContext : DbContext
 {
+    // Organization & Tenancy
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<SubCustomer> SubCustomers => Set<SubCustomer>();
-    public DbSet<Country> Countries => Set<Country>();
     public DbSet<ServicePlan> ServicePlans => Set<ServicePlan>();
     public DbSet<User> Users => Set<User>();
     

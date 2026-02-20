@@ -2,6 +2,9 @@ using Disnegativos.Shared.Services;
 using Disnegativos.Web.Components;
 using Disnegativos.Web.Services;
 using Disnegativos.Shared.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Components;
 
 namespace Disnegativos
 {
@@ -15,6 +18,19 @@ namespace Disnegativos
             builder.Services.AddRazorComponents()
                 .AddInteractiveWebAssemblyComponents();
 
+            builder.Services.AddControllers();
+            builder.Services.AddSignalR();
+
+            // Configuración del cliente SignalR para uso dentro de la web (Blazor Server/WASM)
+            builder.Services.AddScoped(sp =>
+            {
+                var navigation = sp.GetRequiredService<NavigationManager>();
+                return new HubConnectionBuilder()
+                    .WithUrl(navigation.ToAbsoluteUri("/hubs/collaboration"))
+                    .WithAutomaticReconnect()
+                    .Build();
+            });
+
             // Add device-specific services used by the Disnegativos.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
@@ -23,6 +39,13 @@ namespace Disnegativos
             builder.Services.AddDisnegativosSharedServices(connectionString);
 
             var app = builder.Build();
+
+            // Aplicar migraciones automáticamente
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<Disnegativos.Shared.Data.DisnegativosDbContext>();
+                dbContext.Database.Migrate();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -48,6 +71,8 @@ namespace Disnegativos
                     typeof(Disnegativos.Shared._Imports).Assembly,
                     typeof(Disnegativos.Web.Client._Imports).Assembly);
 
+            app.MapHub<Disnegativos.Web.Hubs.CollaborationHub>("/hubs/collaboration");
+            app.MapControllers();
             app.Run();
         }
     }

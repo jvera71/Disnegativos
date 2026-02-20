@@ -16,8 +16,11 @@ public static class ServiceCollectionExtensions
         services.AddRadzenComponents();
 
         // 2. DisnegativosDbContext (SQLite)
-        services.AddDbContext<DisnegativosDbContext>(options =>
+        services.AddDbContextFactory<DisnegativosDbContext>((sp, options) =>
             options.UseSqlite(connectionString));
+
+        // Registrar también el DbContext normal para inyección directa
+        services.AddScoped(sp => sp.GetRequiredService<IDbContextFactory<DisnegativosDbContext>>().CreateDbContext());
 
         // 3. ITimeZoneService
         services.AddScoped<ITimeZoneService, TimeZoneService>();

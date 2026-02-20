@@ -6,13 +6,18 @@ using Radzen;
 using Disnegativos.Shared.DTOs;
 using Disnegativos.Shared.Services.Interfaces;
 
+using Microsoft.AspNetCore.SignalR.Client;
+
 namespace Disnegativos.Shared.Pages.Events;
 
-public partial class EventsPage : ComponentBase
+public partial class EventsPage : ComponentBase, IAsyncDisposable
 {
     // Solo el Container puede inyectar los servicios
     [Inject] 
     private IEventService EventService { get; set; } = default!;
+
+    [Inject]
+    private HubConnection HubConnection { get; set; } = default!;
 
     private List<EventDto> _events = [];
     private List<TeamDto> _availableTeams = [];
@@ -26,6 +31,24 @@ public partial class EventsPage : ComponentBase
     {
         await LoadEventsAsync();
         _availableTeams = await EventService.GetAvailableTeamsAsync();
+
+        // ── Suscribirse a cambios en tiempo real ──
+        HubConnection.On<string, Guid, string>("EntityChanged", async (entityType, entityId, changeType) =>
+        {
+            // Si el cambio es en un Evento (y no somos nosotros mismos recargando)
+            if (entityType == "Event")
+            {
+                await LoadEventsAsync();
+                await InvokeAsync(StateHasChanged);
+            }
+        });
+
+        // Asegurar que la conexión esté iniciada
+        if (HubConnection.State == HubConnectionState.Disconnected)
+        {
+            try { await HubConnection.StartAsync(); }
+            catch { /* Ignorar si falla (ej: offline en MAUI) */ }
+        }
     }
 
     private async Task LoadEventsAsync()
@@ -60,6 +83,13 @@ public partial class EventsPage : ComponentBase
     private async Task HandleSaveAsync(EventEditDto model)
     {
         await EventService.SaveEventAsync(model);
+        
+        // Notificar a otros usuarios
+        if (HubConnection.State == HubConnectionState.Connected)
+        {
+            await HubConnection.InvokeAsync("NotifyEntityChanged", "Event", model.Id, "Modified");
+        }
+
         _isEditing = false;
         await LoadEventsAsync();
     }
@@ -74,6 +104,21 @@ public partial class EventsPage : ComponentBase
     {
         // Delete Soft
         await EventService.DeleteEventAsync(eventId);
+
+        // Notificar a otros usuarios
+        if (HubConnection.State == HubConnectionState.Connected)
+        {
+            await HubConnection.InvokeAsync("NotifyEntityChanged", "Event", eventId, "Deleted");
+        }
+
         await LoadEventsAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        // En una app real podríamos querer quitar el handler específico con .Off(...)
+        // pero dado que el HubConnection suele ser Singleton/Scoped, es mejor dejarlo o limpiar.
+        HubConnection.Remove("EntityChanged");
+        await ValueTask.CompletedTask;
     }
 }
