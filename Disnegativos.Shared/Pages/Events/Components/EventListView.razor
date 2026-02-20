@@ -1,0 +1,90 @@
+@using Disnegativos.Shared.DTOs
+@using Microsoft.AspNetCore.Components
+@inject IStringLocalizer<SharedResources> L
+@inject ITimeZoneService TimeZoneService
+
+<div style="margin-bottom: 2rem;">
+    <RadzenText TextStyle="TextStyle.H4" TagName="TagName.H1" class="rz-color-primary" style="font-weight: 700;">
+        <RadzenIcon Icon="event" style="vertical-align: sub;" /> @L["MyEvents_Title"]
+    </RadzenText>
+    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-base-600">
+        @L["MyEvents_Subtitle"]
+    </RadzenText>
+    
+    <div class="rz-mt-3 rz-text-align-right">
+        <RadzenButton Icon="add" Text="@L["EventForm_TitleCreate"]" ButtonStyle="ButtonStyle.Primary" Click="@(() => OnAdd.InvokeAsync())" />
+    </div>
+</div>
+
+<RadzenCard class="rz-shadow-3 rz-border-radius-2" style="padding: 0;">
+    <RadzenDataGrid Data="@Events" TItem="EventDto" IsLoading="@IsLoading"
+                    AllowPaging="true" PageSize="10" 
+                    AllowSorting="true" AllowFiltering="true" 
+                    GridLines="Radzen.DataGridGridLines.None"
+                    Style="border: none; border-radius: 8px; overflow: hidden;">
+        
+        <EmptyTemplate>
+            <div class="rz-p-4 rz-text-align-center rz-color-base-500">
+                @L["MyEvents_NoData"]
+            </div>
+        </EmptyTemplate>
+        
+        <Columns>
+            <RadzenDataGridColumn TItem="EventDto" Property="StartDate" Title="@L["Grid_Date"]" Width="140px">
+                <Template Context="evt">
+                    @{
+                        // Both StartDate and StartTime are stored as UTC. Merge them and convert to local time.
+                        var localDateTime = TimeZoneService.ToUserTime(evt.StartDate.Add(evt.StartTime));
+                    }
+                    <strong>@localDateTime.ToShortDateString()</strong>
+                    <div style="font-size: 0.8em; color: var(--rz-text-tertiary-color);">@localDateTime.ToString(@"HH\:mm")</div>
+                </Template>
+            </RadzenDataGridColumn>
+            
+            <RadzenDataGridColumn TItem="EventDto" Property="Name" Title="@L["Grid_EventName"]" />
+
+            <RadzenDataGridColumn TItem="EventDto" Title="@L["Grid_Match"]" Filterable="false" Sortable="false">
+                <Template Context="evt">
+                    @evt.HomeTeamName 
+                    @if(!string.IsNullOrEmpty(evt.AwayTeamName))
+                    {
+                        <span style="margin: 0 8px; color: var(--rz-text-tertiary-color);">vs</span>
+                        @evt.AwayTeamName
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="EventDto" Property="Result" Title="@L["Grid_Result"]" Width="100px" TextAlign="TextAlign.Center">
+                <Template Context="evt">
+                    <RadzenBadge BadgeStyle="BadgeStyle.Light" Text="@(string.IsNullOrEmpty(evt.Result) ? "-" : evt.Result)" IsPill="true" />
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="EventDto" Title="@L["Grid_Actions"]" Width="120px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                <Template Context="evt">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" class="rz-mx-1" 
+                                  Click="@(() => OnEdit.InvokeAsync(evt.Id))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" 
+                                  Click="@(() => OnDelete.InvokeAsync(evt.Id))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public List<EventDto> Events { get; set; } = [];
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public EventCallback OnAdd { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnDelete { get; set; }
+}

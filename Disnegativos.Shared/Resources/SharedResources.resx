@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MyEvents_Title" xml:space="preserve">
+    <value>Mis Eventos</value>
+  </data>
+  <data name="MyEvents_Subtitle" xml:space="preserve">
+    <value>Listado y gestión de partidos / sesiones</value>
+  </data>
+  <data name="MyEvents_NoData" xml:space="preserve">
+    <value>No hay eventos o partidos planificados.</value>
+  </data>
+  <data name="Grid_Date" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="Grid_EventName" xml:space="preserve">
+    <value>Nombre del Evento</value>
+  </data>
+  <data name="Grid_Match" xml:space="preserve">
+    <value>Encuentro</value>
+  </data>
+  <data name="Grid_Result" xml:space="preserve">
+    <value>Resultado</value>
+  </data>
+  <data name="Grid_Actions" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="EventForm_TitleCreate" xml:space="preserve">
+    <value>Crear Evento</value>
+  </data>
+  <data name="EventForm_TitleEdit" xml:space="preserve">
+    <value>Editar Evento</value>
+  </data>
+  <data name="EventForm_Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="EventForm_Date" xml:space="preserve">
+    <value>Fecha (Local)</value>
+  </data>
+  <data name="EventForm_Time" xml:space="preserve">
+    <value>Hora</value>
+  </data>
+  <data name="EventForm_HomeTeam" xml:space="preserve">
+    <value>Equipo Local</value>
+  </data>
+  <data name="EventForm_AwayTeam" xml:space="preserve">
+    <value>Equipo Visitante (Opcional)</value>
+  </data>
+  <data name="EventForm_Result" xml:space="preserve">
+    <value>Resultado final</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>El nombre es obligatorio.</value>
+  </data>
+  <data name="DateRequired" xml:space="preserve">
+    <value>La fecha es obligatoria.</value>
+  </data>
+  <data name="TimeRequired" xml:space="preserve">
+    <value>La hora es obligatoria.</value>
+  </data>
+  <data name="HomeTeamRequired" xml:space="preserve">
+    <value>Debe especificar el equipo local.</value>
+  </data>
+</root>

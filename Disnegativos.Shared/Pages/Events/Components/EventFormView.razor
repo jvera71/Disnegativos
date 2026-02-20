@@ -1,0 +1,100 @@
+@using Disnegativos.Shared.DTOs
+@using Microsoft.AspNetCore.Components
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenCard class="rz-shadow-3 rz-p-4 rz-border-radius-2">
+    <RadzenText TextStyle="TextStyle.H5" class="rz-mb-4" style="font-weight: 600;">
+        <RadzenIcon Icon="event_note" /> @(Model.Id == null ? L["EventForm_TitleCreate"] : L["EventForm_TitleEdit"])
+    </RadzenText>
+
+    <RadzenTemplateForm TItem="EventEditDto" Data="@Model" Submit="@OnSubmit">
+        <RadzenStack Gap="1.5rem">
+
+            <!-- Name Field -->
+            <div class="rz-row">
+                <div class="rz-col-12 rz-col-md-3 rz-text-align-start rz-text-align-md-right rz-align-items-center rz-d-flex">
+                    <RadzenLabel Text="@L["EventForm_Name"]" Component="Name" />
+                </div>
+                <div class="rz-col-12 rz-col-md-9">
+                    <RadzenTextBox Name="Name" @bind-Value="Model.Name" class="w-100" />
+                    <RadzenRequiredValidator Component="Name" Text="@L["NameRequired"]" Style="position: absolute" />
+                </div>
+            </div>
+
+            <!-- Date and Time -->
+            <div class="rz-row">
+                <div class="rz-col-12 rz-col-md-3 rz-text-align-start rz-text-align-md-right rz-align-items-center rz-d-flex">
+                    <RadzenLabel Text="@L["EventForm_Date"]" Component="StartDate" />
+                </div>
+                <div class="rz-col-12 rz-col-md-4">
+                    <RadzenDatePicker Name="StartDate" @bind-Value="Model.LocalStartDate" DateFormat="d" class="w-100" />
+                    <RadzenRequiredValidator Component="StartDate" Text="@L["DateRequired"]" Style="position: absolute" />
+                </div>
+                
+                <div class="rz-col-12 rz-col-md-2 rz-text-align-start rz-text-align-md-right rz-align-items-center rz-d-flex">
+                    <RadzenLabel Text="@L["EventForm_Time"]" Component="StartTime" />
+                </div>
+                <div class="rz-col-12 rz-col-md-3">
+                    <RadzenDatePicker Name="StartTime" @bind-Value="Model.LocalStartTime" TimeOnly="true" DateFormat="t" class="w-100" />
+                    <RadzenRequiredValidator Component="StartTime" Text="@L["TimeRequired"]" Style="position: absolute" />
+                </div>
+            </div>
+
+            <!-- Home Team Field -->
+            <div class="rz-row">
+                <div class="rz-col-12 rz-col-md-3 rz-text-align-start rz-text-align-md-right rz-align-items-center rz-d-flex">
+                    <RadzenLabel Text="@L["EventForm_HomeTeam"]" Component="HomeTeam" />
+                </div>
+                <div class="rz-col-12 rz-col-md-9">
+                    <RadzenDropDown Name="HomeTeam" @bind-Value="Model.HomeTeamId" Data="@Teams" 
+                                    TextProperty="Name" ValueProperty="Id" class="w-100" />
+                    <RadzenRequiredValidator Component="HomeTeam" Text="@L["HomeTeamRequired"]" DefaultValue="0" Style="position: absolute" />
+                </div>
+            </div>
+
+            <!-- Away Team Field -->
+            <div class="rz-row">
+                <div class="rz-col-12 rz-col-md-3 rz-text-align-start rz-text-align-md-right rz-align-items-center rz-d-flex">
+                    <RadzenLabel Text="@L["EventForm_AwayTeam"]" />
+                </div>
+                <div class="rz-col-12 rz-col-md-9">
+                    <RadzenDropDown @bind-Value="Model.AwayTeamId" Data="@Teams" 
+                                    TextProperty="Name" ValueProperty="Id" 
+                                    AllowClear="true" class="w-100" />
+                </div>
+            </div>
+
+            <!-- Result Field -->
+            <div class="rz-row">
+                 <div class="rz-col-12 rz-col-md-3 rz-text-align-start rz-text-align-md-right rz-align-items-center rz-d-flex">
+                     <RadzenLabel Text="@L["EventForm_Result"]" />
+                 </div>
+                 <div class="rz-col-12 rz-col-md-4">
+                     <RadzenTextBox @bind-Value="Model.Result" class="w-100" Placeholder="e.g. 2 - 1" />
+                 </div>
+            </div>
+
+            <div class="rz-row rz-mt-4">
+                <div class="rz-col-12 rz-text-align-right">
+                    <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Light" Text="@L["Cancel"]" 
+                                  Click="@OnCancel" class="rz-mr-2" />
+                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="@L["Save"]" />
+                </div>
+            </div>
+        </RadzenStack>
+    </RadzenTemplateForm>
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public EventEditDto Model { get; set; } = new();
+
+    [Parameter]
+    public List<TeamDto> Teams { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<EventEditDto> OnSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MyEvents_Title" xml:space="preserve">
+    <value>My Events</value>
+  </data>
+  <data name="MyEvents_Subtitle" xml:space="preserve">
+    <value>List and manage matches / sessions</value>
+  </data>
+  <data name="MyEvents_NoData" xml:space="preserve">
+    <value>There are no planned events or matches.</value>
+  </data>
+  <data name="Grid_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Grid_EventName" xml:space="preserve">
+    <value>Event Name</value>
+  </data>
+  <data name="Grid_Match" xml:space="preserve">
+    <value>Match</value>
+  </data>
+  <data name="Grid_Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="Grid_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="EventForm_TitleCreate" xml:space="preserve">
+    <value>Create Event</value>
+  </data>
+  <data name="EventForm_TitleEdit" xml:space="preserve">
+    <value>Edit Event</value>
+  </data>
+  <data name="EventForm_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="EventForm_Date" xml:space="preserve">
+    <value>Date (Local)</value>
+  </data>
+  <data name="EventForm_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="EventForm_HomeTeam" xml:space="preserve">
+    <value>Home Team</value>
+  </data>
+  <data name="EventForm_AwayTeam" xml:space="preserve">
+    <value>Away Team (Optional)</value>
+  </data>
+  <data name="EventForm_Result" xml:space="preserve">
+    <value>Final Result</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="DateRequired" xml:space="preserve">
+    <value>Date is required.</value>
+  </data>
+  <data name="TimeRequired" xml:space="preserve">
+    <value>Time is required.</value>
+  </data>
+  <data name="HomeTeamRequired" xml:space="preserve">
+    <value>Home Team must be specified.</value>
+  </data>
+</root>

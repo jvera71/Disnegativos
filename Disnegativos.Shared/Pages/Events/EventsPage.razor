@@ -1,0 +1,22 @@
+@page "/events"
+@using Disnegativos.Shared.Pages.Events.Components
+
+<PageTitle>Mis Eventos | Disnegativos</PageTitle>
+
+@* Este es el Container (Smart Component) que orquesta los datos *@
+
+@if (_isEditing)
+{
+    <EventFormView Model="@_editingEvent" 
+                   Teams="@_availableTeams"
+                   OnSubmit="@HandleSaveAsync" 
+                   OnCancel="@HandleCancel" />
+}
+else
+{
+    <EventListView Events="@_events" 
+                   IsLoading="@_isLoading" 
+                   OnAdd="@HandleAdd"
+                   OnEdit="@HandleEditAsync"
+                   OnDelete="@HandleDeleteAsync" />
+}
