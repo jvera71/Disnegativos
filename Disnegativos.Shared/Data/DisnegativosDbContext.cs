@@ -16,10 +16,44 @@ public class DisnegativosDbContext : DbContext
     public DbSet<ServicePlan> ServicePlans => Set<ServicePlan>();
     public DbSet<User> Users => Set<User>();
     
-    // Core Domain
+    // Reference & Catalog
+    public DbSet<Country> Countries => Set<Country>();
+    public DbSet<SportDiscipline> SportDisciplines => Set<SportDiscipline>();
+    public DbSet<SportCategory> SportCategories => Set<SportCategory>();
+    public DbSet<FieldPosition> FieldPositions => Set<FieldPosition>();
+
+    // Entities & Teams
+    public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<Team> Teams => Set<Team>();
+    public DbSet<Player> Players => Set<Player>();
+    public DbSet<TeamPlayer> TeamPlayers => Set<TeamPlayer>();
+
+    // Competitions & Events
     public DbSet<Competition> Competitions => Set<Competition>();
     public DbSet<Event> Events => Set<Event>();
+
+    // Analysis Templates
+    public DbSet<Template> Templates => Set<Template>();
+    public DbSet<Panel> Panels => Set<Panel>();
+    public DbSet<Block> Blocks => Set<Block>();
+    public DbSet<Button> Buttons => Set<Button>();
+    public DbSet<Concept> Concepts => Set<Concept>();
+
+    // Analysis & Actions
+    public DbSet<Analysis> Analyses => Set<Analysis>();
+    public DbSet<AnalysisMedia> AnalysisMedias => Set<AnalysisMedia>();
+    public DbSet<GamePeriod> GamePeriods => Set<GamePeriod>();
+    public DbSet<MatchAction> MatchActions => Set<MatchAction>();
+    public DbSet<ActionPlayer> ActionPlayers => Set<ActionPlayer>();
+    public DbSet<ActionConcept> ActionConcepts => Set<ActionConcept>();
+
+    // Reports & Slides
+    public DbSet<Report> Reports => Set<Report>();
+    public DbSet<Slide> Slides => Set<Slide>();
+
+    // People (Staff)
+    public DbSet<Person> Persons => Set<Person>();
+    public DbSet<PersonRole> PersonRoles => Set<PersonRole>();
 
     // Tools
     public DbSet<SyncLog> SyncLogs => Set<SyncLog>();

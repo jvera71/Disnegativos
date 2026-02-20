@@ -1,6 +1,7 @@
 using Disnegativos.Shared.Services;
 using Disnegativos.Web.Components;
 using Disnegativos.Web.Services;
+using Disnegativos.Shared.DependencyInjection;
 
 namespace Disnegativos
 {
@@ -16,6 +17,10 @@ namespace Disnegativos
 
             // Add device-specific services used by the Disnegativos.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+            // Disnegativos.Shared common services (Radzen, DbContext SQLite, TimeZoneService, EventService)
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=disnegativos.db";
+            builder.Services.AddDisnegativosSharedServices(connectionString);
 
             var app = builder.Build();
 

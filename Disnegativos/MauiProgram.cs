@@ -1,6 +1,7 @@
 ﻿using Disnegativos.Services;
 using Disnegativos.Shared.Services;
 using Microsoft.Extensions.Logging;
+using Disnegativos.Shared.DependencyInjection;
 
 namespace Disnegativos
 {
@@ -18,6 +19,10 @@ namespace Disnegativos
 
             // Add device-specific services used by the Disnegativos.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+            // Disnegativos.Shared common services (Radzen, DbContext SQLite, TimeZoneService, EventService)
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "disnegativos.db");
+            builder.Services.AddDisnegativosSharedServices($"Data Source={dbPath}");
 
             builder.Services.AddMauiBlazorWebView();
 
