@@ -21,20 +21,10 @@ namespace Disnegativos
             builder.Services.AddControllers();
             builder.Services.AddSignalR();
 
-            // Configuración del cliente SignalR para uso dentro de la web (Blazor Server/WASM)
-            builder.Services.AddScoped(sp =>
-            {
-                var navigation = sp.GetRequiredService<NavigationManager>();
-                return new HubConnectionBuilder()
-                    .WithUrl(navigation.ToAbsoluteUri("/hubs/collaboration"))
-                    .WithAutomaticReconnect()
-                    .Build();
-            });
-
             // Add device-specific services used by the Disnegativos.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-            // Disnegativos.Shared common services (Radzen, DbContext SQLite, TimeZoneService, EventService)
+            // Disnegativos.Shared common services (Radzen, DbContext SQLite, TimeZoneService, EventService, HubConnection)
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=disnegativos.db";
             builder.Services.AddDisnegativosSharedServices(connectionString);
 

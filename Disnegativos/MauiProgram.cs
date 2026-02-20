@@ -24,9 +24,10 @@ namespace Disnegativos
             // Add device-specific services used by the Disnegativos.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-            // Disnegativos.Shared common services (Radzen, DbContext SQLite, TimeZoneService, EventService)
+            // Disnegativos.Shared common services (Radzen, DbContext SQLite, TimeZoneService, EventService, HubConnection)
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "disnegativos.db");
-            builder.Services.AddDisnegativosSharedServices($"Data Source={dbPath}");
+            var serverUrl = "http://localhost:5000/";
+            builder.Services.AddDisnegativosSharedServices($"Data Source={dbPath}", $"{serverUrl}hubs/collaboration");
 
             // Sobrescribir registro de DbContext para añadir interceptor (solo en MAUI)
             builder.Services.AddDbContextFactory<Disnegativos.Shared.Data.DisnegativosDbContext>((sp, options) =>
@@ -40,18 +41,8 @@ namespace Disnegativos
             builder.Services.AddSingleton<IConnectivityService, ConnectivityService>();
             
             // HttpClient para el SyncService (ajústese la URL base según sea necesario)
-            var serverUrl = "http://localhost:5000/";
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(serverUrl) });
             builder.Services.AddScoped<ISyncService, SyncService>();
-
-            // Configuración del cliente SignalR (MAUI)
-            builder.Services.AddSingleton(sp =>
-            {
-                return new HubConnectionBuilder()
-                    .WithUrl($"{serverUrl}hubs/collaboration")
-                    .WithAutomaticReconnect()
-                    .Build();
-            });
 
             builder.Services.AddMauiBlazorWebView();
 
