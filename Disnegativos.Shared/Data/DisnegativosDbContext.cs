@@ -54,6 +54,7 @@ public class DisnegativosDbContext : DbContext
     // People (Staff)
     public DbSet<Person> Persons => Set<Person>();
     public DbSet<PersonRole> PersonRoles => Set<PersonRole>();
+    public DbSet<Referee> Referees => Set<Referee>();
 
     // Tools
     public DbSet<SyncLog> SyncLogs => Set<SyncLog>();

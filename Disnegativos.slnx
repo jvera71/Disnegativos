@@ -1,6 +1,5 @@
 <Solution>
   <Project Path="Disnegativos.Shared/Disnegativos.Shared.csproj" />
-  <Project Path="Disnegativos.Web.Client/Disnegativos.Web.Client.csproj" />
   <Project Path="Disnegativos.Web/Disnegativos.Web.csproj" />
   <Project Path="Disnegativos/Disnegativos.csproj" />
 </Solution>

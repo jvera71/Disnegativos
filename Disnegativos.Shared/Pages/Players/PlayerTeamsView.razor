@@ -1,0 +1,94 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Data.Entities
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+@inject DialogService DialogService
+
+<RadzenStack Gap="1rem">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">@L["AssignedTeams"]</RadzenText>
+        <RadzenButton Icon="add" Text="@L["AssignToTeam"]" Click="@OnAssign" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" />
+    </RadzenStack>
+
+    <RadzenDataGrid @ref="_grid" Data="@Data" TItem="PlayerTeamAssignmentDto" AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="5">
+        <Columns>
+            <RadzenDataGridColumn TItem="PlayerTeamAssignmentDto" Property="TeamName" Title="@L["Team"]" />
+            <RadzenDataGridColumn TItem="PlayerTeamAssignmentDto" Property="JerseyNumber" Title="@L["Jersey"]" Width="100px" />
+            <RadzenDataGridColumn TItem="PlayerTeamAssignmentDto" Property="FieldPositionName" Title="@L["Position"]" />
+            <RadzenDataGridColumn TItem="PlayerTeamAssignmentDto" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="120px">
+                <Template Context="assignment">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Click="@(() => OnEditAssignment(assignment))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" class="rz-ml-2" 
+                                  Click="@(() => OnDeleteAssignment(assignment))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter] public Guid PlayerId { get; set; }
+    [Parameter] public List<PlayerTeamAssignmentDto> Data { get; set; } = [];
+    [Parameter] public List<TeamDto> AllTeams { get; set; } = [];
+    [Parameter] public List<FieldPosition> FieldPositions { get; set; } = [];
+    [Parameter] public EventCallback<PlayerTeamAssignmentDto> OnSave { get; set; }
+    [Parameter] public EventCallback<Guid> OnRemove { get; set; }
+
+    private RadzenDataGrid<PlayerTeamAssignmentDto> _grid = default!;
+
+    private async Task OnAssign()
+    {
+        var newAssignment = new PlayerTeamAssignmentDto { ProjectPlayerId = PlayerId, Id = Guid.NewGuid() };
+        await ShowEditDialog(newAssignment, true);
+    }
+
+    private async Task OnEditAssignment(PlayerTeamAssignmentDto assignment)
+    {
+        await ShowEditDialog(assignment, false);
+    }
+
+    private async Task ShowEditDialog(PlayerTeamAssignmentDto assignment, bool isNew)
+    {
+        var result = await DialogService.OpenAsync(L["EditTeamAssignment"], ds => 
+            @<RadzenStack Gap="1rem">
+                <RadzenFormField Text="@L["Team"]">
+                    <RadzenDropDown @bind-Value="assignment.TeamId" Data="@AllTeams" TextProperty="Name" ValueProperty="Id" 
+                                    class="rz-w-100" Disabled="@(!isNew)" AllowFiltering="true" />
+                </RadzenFormField>
+                <RadzenRow>
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@L["Jersey"]">
+                            <RadzenTextBox @bind-Value="assignment.JerseyNumber" class="rz-w-100" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@L["Position"]">
+                            <RadzenDropDown @bind-Value="assignment.FieldPositionId" Data="@FieldPositions" TextProperty="Name" ValueProperty="Id" 
+                                            class="rz-w-100" AllowClear="true" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem">
+                    <RadzenButton Text="@L["Cancel"]" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    <RadzenButton Text="@L["Save"]" Click="() => ds.Close(true)" ButtonStyle="ButtonStyle.Primary" />
+                </RadzenStack>
+            </RadzenStack>
+        );
+
+        if (result == true)
+        {
+            await OnSave.InvokeAsync(assignment);
+            await _grid.Reload();
+        }
+    }
+
+    private async Task OnDeleteAssignment(PlayerTeamAssignmentDto assignment)
+    {
+        var confirm = await DialogService.Confirm(L["AreYouSure"], L["Delete"], new ConfirmOptions { OkButtonText = L["Yes"], CancelButtonText = L["No"] });
+        if (confirm == true)
+        {
+            await OnRemove.InvokeAsync(assignment.Id);
+            await _grid.Reload();
+        }
+    }
+}

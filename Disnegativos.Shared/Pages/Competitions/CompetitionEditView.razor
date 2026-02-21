@@ -1,0 +1,97 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Data.Entities
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenTemplateForm TItem="CompetitionEditDto" Data="@Model" Submit="@OnSubmit">
+    <RadzenStack Gap="1rem">
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <RadzenFormField Text="@L["Title"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Title" Name="Title" class="rz-w-100" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="Title" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Discipline"]" class="rz-w-100">
+                    <RadzenDropDown @bind-Value="Model.SportDisciplineId" Data="@Disciplines" TextProperty="NameKey" ValueProperty="Id" 
+                                    class="rz-w-100" Name="Discipline" Change="@OnDisciplineChanged" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="Discipline" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Category"]" class="rz-w-100">
+                    <RadzenDropDown @bind-Value="Model.SportCategoryId" Data="@FilteredCategories" TextProperty="Name" ValueProperty="Id" 
+                                    class="rz-w-100" Name="Category" Disabled="@(Model.SportDisciplineId == Guid.Empty)" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="Category" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["StartDate"]" class="rz-w-100">
+                    <RadzenDatePicker @bind-Value="Model.StartDate" class="rz-w-100" DateFormat="d" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["EndDate"]" class="rz-w-100">
+                    <RadzenDatePicker @bind-Value="Model.EndDate" class="rz-w-100" DateFormat="d" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Color"]" class="rz-w-100">
+                    <RadzenColorPicker @bind-Value="Model.Color" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" class="rz-h-100">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenCheckBox @bind-Value="Model.IsActive" Name="IsActive" />
+                        <RadzenLabel Text="@L["Active"]" Component="IsActive" />
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenCheckBox @bind-Value="Model.IsPrivate" Name="IsPrivate" />
+                        <RadzenLabel Text="@L["Private"]" Component="IsPrivate" />
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenCheckBox @bind-Value="Model.ShowInCalendar" Name="ShowInCalendar" />
+                        <RadzenLabel Text="@L["ShowInCalendar"]" Component="ShowInCalendar" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenFormField Text="@L["Notes"]" class="rz-w-100">
+            <RadzenTextArea @bind-Value="Model.Notes" Rows="3" class="rz-w-100" />
+        </RadzenFormField>
+
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem" class="rz-mt-4">
+            <RadzenButton ButtonType="ButtonType.Button" Text="@L["Cancel"]" ButtonStyle="ButtonStyle.Light" Click="@OnCancel" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="@L["Save"]" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public CompetitionEditDto Model { get; set; } = new();
+    [Parameter] public List<SportDiscipline> Disciplines { get; set; } = [];
+    [Parameter] public List<SportCategory> Categories { get; set; } = [];
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<CompetitionEditDto> OnSubmit { get; set; }
+
+    private List<SportCategory> FilteredCategories => Categories
+        .Where(c => c.SportDisciplineId == Model.SportDisciplineId)
+        .ToList();
+
+    private void OnDisciplineChanged(object value)
+    {
+        Model.SportCategoryId = Guid.Empty;
+    }
+}

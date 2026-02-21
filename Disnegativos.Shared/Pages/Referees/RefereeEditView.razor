@@ -1,0 +1,80 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenTemplateForm TItem="RefereeEditDto" Data="@Model" Submit="@OnSubmit">
+    <RadzenStack Gap="1rem">
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["FirstName"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.FirstName" Name="FirstName" class="rz-w-100" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="FirstName" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["LastName"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.LastName" Name="LastName" class="rz-w-100" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="LastName" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["LicenseNumber"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.LicenseNumber" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Category"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Category" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Email"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Email" class="rz-w-100" />
+                </RadzenFormField>
+                <RadzenEmailValidator Component="Email" Text="@L["InvalidEmail"]" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Phone"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Phone" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Country"]" class="rz-w-100">
+                    <RadzenDropDown @bind-Value="Model.CountryId" Data="@Countries" TextProperty="NameKey" ValueProperty="Id" 
+                                    AllowClear="true" class="rz-w-100" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains" AllowFiltering="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-h-100">
+                    <RadzenCheckBox @bind-Value="Model.IsActive" Name="IsActive" />
+                    <RadzenLabel Text="@L["Active"]" Component="IsActive" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenFormField Text="@L["Notes"]" class="rz-w-100">
+            <RadzenTextArea @bind-Value="Model.Notes" Rows="3" class="rz-w-100" />
+        </RadzenFormField>
+
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem" class="rz-mt-4">
+            <RadzenButton ButtonType="ButtonType.Button" Text="@L["Cancel"]" ButtonStyle="ButtonStyle.Light" Click="@OnCancel" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="@L["Save"]" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public RefereeEditDto Model { get; set; } = new();
+    [Parameter] public List<CountryDto> Countries { get; set; } = [];
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<RefereeEditDto> OnSubmit { get; set; }
+}

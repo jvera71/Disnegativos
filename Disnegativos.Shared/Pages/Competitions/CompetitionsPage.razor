@@ -1,0 +1,31 @@
+@page "/competitions"
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenBreadCrumb class="rz-mb-4">
+            <RadzenBreadCrumbItem Path="/" Icon="home" />
+            <RadzenBreadCrumbItem Text="@L["Competitions"]" />
+        </RadzenBreadCrumb>
+
+        <RadzenCard class="rz-shadow-3">
+            @if (!_isEditing)
+            {
+                <CompetitionListView Data="@_competitions" 
+                                   IsLoading="@_isLoading" 
+                                   OnAdd="@HandleAdd" 
+                                   OnEdit="@HandleEditAsync" 
+                                   OnDelete="@HandleDeleteAsync" />
+            }
+            else
+            {
+                <CompetitionEditView Model="@_editingCompetition" 
+                                   Disciplines="@_disciplines"
+                                   Categories="@_categories"
+                                   OnCancel="@HandleCancel" 
+                                   OnSubmit="@HandleSaveAsync" />
+            }
+        </RadzenCard>
+    </ChildContent>
+</RadzenContent>

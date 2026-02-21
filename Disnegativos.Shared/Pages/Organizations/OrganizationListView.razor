@@ -1,0 +1,42 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H5" class="rz-m-0">@L["Clubs"]</RadzenText>
+        <RadzenButton Icon="add" Text="@L["AddClub"]" Click="@OnAdd" ButtonStyle="ButtonStyle.Primary" />
+    </RadzenStack>
+
+    <RadzenDataGrid Data="@Data" TItem="OrganizationDto" AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="10" 
+                    IsLoading="@IsLoading" EmptyText="@L["NoDataFound"]">
+        <Columns>
+            <RadzenDataGridColumn TItem="OrganizationDto" Property="Name" Title="@L["Name"]" />
+            <RadzenDataGridColumn TItem="OrganizationDto" Property="City" Title="@L["City"]" />
+            <RadzenDataGridColumn TItem="OrganizationDto" Property="SportDisciplineName" Title="@L["Discipline"]" />
+            <RadzenDataGridColumn TItem="OrganizationDto" Property="Email" Title="@L["Email"]" />
+            <RadzenDataGridColumn TItem="OrganizationDto" Property="Phone" Title="@L["Phone"]" />
+            <RadzenDataGridColumn TItem="OrganizationDto" Property="IsActive" Title="@L["Active"]" Width="80px" TextAlign="TextAlign.Center">
+                <Template Context="org">
+                    <RadzenIcon Icon="@(org.IsActive ? "check_circle" : "cancel")" 
+                                IconColor="@(org.IsActive ? "var(--rz-success)" : "var(--rz-danger)")" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="OrganizationDto" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                <Template Context="org">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@(() => OnEdit.InvokeAsync(org.Id))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" class="rz-ml-2" 
+                                  Click="@(() => OnDelete.InvokeAsync(org.Id))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter] public List<OrganizationDto> Data { get; set; } = [];
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback<Guid> OnEdit { get; set; }
+    [Parameter] public EventCallback<Guid> OnDelete { get; set; }
+}

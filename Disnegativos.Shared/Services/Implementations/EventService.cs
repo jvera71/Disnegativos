@@ -112,10 +112,13 @@ public class EventService : IEventService
             .OrderBy(t => t.Name)
             .ToListAsync();
 
-        return teams.Select(t => new TeamDto
-        {
-            Id = t.Id,
-            Name = t.Name
-        }).ToList();
+        return teams.Select(t => new TeamDto(
+            t.Id,
+            t.Name,
+            t.Alias,
+            null,
+            null,
+            t.IsActive
+        )).ToList();
     }
 }

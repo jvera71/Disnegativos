@@ -1,0 +1,33 @@
+@using Disnegativos.Shared.DTOs
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+        <RadzenText TextStyle="TextStyle.H4">@L["Countries"]</RadzenText>
+        <RadzenButton Icon="add" Text="@L["AddCountry"]" Click="@OnAdd" ButtonStyle="ButtonStyle.Primary" />
+    </RadzenStack>
+
+    <RadzenDataGrid Data="@Countries" TItem="CountryDto" AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="10">
+        <Columns>
+            <RadzenDataGridColumn TItem="CountryDto" Property="IsoCode" Title="@L["ISO"]" Width="80px" />
+            <RadzenDataGridColumn TItem="CountryDto" Property="NameKey" Title="@L["Name"]" />
+            <RadzenDataGridColumn TItem="CountryDto" Property="NationalityKey" Title="@L["Nationality"]" />
+            <RadzenDataGridColumn TItem="CountryDto" Property="LanguageCode" Title="@L["Language"]" Width="100px" />
+            <RadzenDataGridColumn TItem="CountryDto" Property="SortOrder" Title="@L["Order"]" Width="80px" />
+            <RadzenDataGridColumn TItem="CountryDto" Title="@L["Actions"]" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Width="120px">
+                <Template Context="country">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@(() => OnEdit.InvokeAsync(country.Id))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" Click="@(() => OnDelete.InvokeAsync(country.Id))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter] public List<CountryDto> Countries { get; set; } = [];
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback<Guid> OnEdit { get; set; }
+    [Parameter] public EventCallback<Guid> OnDelete { get; set; }
+}

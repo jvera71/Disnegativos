@@ -1,0 +1,42 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H5" class="rz-m-0">@L["Referees"]</RadzenText>
+        <RadzenButton Icon="add" Text="@L["AddReferee"]" Click="@OnAdd" ButtonStyle="ButtonStyle.Primary" />
+    </RadzenStack>
+
+    <RadzenDataGrid Data="@Data" TItem="RefereeDto" AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="10" 
+                    IsLoading="@IsLoading" EmptyText="@L["NoDataFound"]">
+        <Columns>
+            <RadzenDataGridColumn TItem="RefereeDto" Property="FullName" Title="@L["Name"]" />
+            <RadzenDataGridColumn TItem="RefereeDto" Property="LicenseNumber" Title="@L["LicenseNumber"]" />
+            <RadzenDataGridColumn TItem="RefereeDto" Property="Category" Title="@L["Category"]" />
+            <RadzenDataGridColumn TItem="RefereeDto" Property="Email" Title="@L["Email"]" />
+            <RadzenDataGridColumn TItem="RefereeDto" Property="CountryName" Title="@L["Country"]" />
+            <RadzenDataGridColumn TItem="RefereeDto" Property="IsActive" Title="@L["Active"]" Width="80px" TextAlign="TextAlign.Center">
+                <Template Context="referee">
+                    <RadzenIcon Icon="@(referee.IsActive ? "check_circle" : "cancel")" 
+                                IconColor="@(referee.IsActive ? "var(--rz-success)" : "var(--rz-danger)")" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="RefereeDto" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                <Template Context="referee">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@(() => OnEdit.InvokeAsync(referee.Id))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" class="rz-ml-2" 
+                                  Click="@(() => OnDelete.InvokeAsync(referee.Id))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter] public List<RefereeDto> Data { get; set; } = [];
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback<Guid> OnEdit { get; set; }
+    [Parameter] public EventCallback<Guid> OnDelete { get; set; }
+}

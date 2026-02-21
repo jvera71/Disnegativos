@@ -1,0 +1,146 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Data.Entities
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenTabs RenderMode="TabRenderMode.Client">
+    <Tabs>
+        <RadzenTabsItem Text="@L["GeneralInfo"]" Icon="person">
+            <RadzenTemplateForm TItem="PlayerEditDto" Data="@Model" Submit="@OnSubmit">
+                <RadzenStack Gap="1rem">
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["FirstName"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.FirstName" Name="FirstName" class="rz-w-100" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="FirstName" Text="@L["RequiredField"]" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["LastName"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.LastName" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["Nickname"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.Nickname" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["Discipline"]" class="rz-w-100">
+                                <RadzenDropDown @bind-Value="Model.SportDisciplineId" Data="@Disciplines" TextProperty="NameKey" ValueProperty="Id" 
+                                                class="rz-w-100" Name="Discipline" Change="@OnDisciplineChanged" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["DateOfBirth"]" class="rz-w-100">
+                                <RadzenDatePicker @bind-Value="Model.DateOfBirth" class="rz-w-100" DateFormat="d" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["Gender"]" class="rz-w-100">
+                                <RadzenDropDown @bind-Value="Model.Gender" TValue="int" Data="@GenderOptions" TextProperty="Text" ValueProperty="Value" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenFormField Text="@L["Height"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.Height" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenFormField Text="@L["Weight"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.Weight" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenFormField Text="@L["PreferredFoot"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.PreferredFoot" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["Email"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.Email" Name="Email" class="rz-w-100" />
+                            </RadzenFormField>
+                            <RadzenEmailValidator Component="Email" Text="@L["InvalidEmail"]" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["Phone"]" class="rz-w-100">
+                                <RadzenTextBox @bind-Value="Model.Phone" class="rz-w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenFormField Text="@L["Country"]" class="rz-w-100">
+                                <RadzenDropDown @bind-Value="Model.CountryId" Data="@Countries" TextProperty="NameKey" ValueProperty="Id" 
+                                                class="rz-w-100" AllowFiltering="true" AllowClear="true" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-h-100">
+                                <RadzenCheckBox @bind-Value="Model.IsActive" Name="IsActive" />
+                                <RadzenLabel Text="@L["Active"]" Component="IsActive" />
+                            </RadzenStack>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenFormField Text="@L["Notes"]" class="rz-w-100">
+                        <RadzenTextArea @bind-Value="Model.Notes" Rows="3" class="rz-w-100" />
+                    </RadzenFormField>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem" class="rz-mt-4">
+                        <RadzenButton ButtonType="ButtonType.Button" Text="@L["Cancel"]" ButtonStyle="ButtonStyle.Light" Click="@OnCancel" />
+                        <RadzenButton ButtonType="ButtonType.Submit" Text="@L["Save"]" ButtonStyle="ButtonStyle.Primary" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTemplateForm>
+        </RadzenTabsItem>
+        
+        <RadzenTabsItem Text="@L["AssignedTeams"]" Icon="groups" Disabled="@(Model.Id == Guid.Empty)">
+            <PlayerTeamsView PlayerId="@Model.Id" 
+                             Data="@Assignments" 
+                             AllTeams="@AllTeams"
+                             FieldPositions="@FieldPositions"
+                             OnSave="@OnSaveAssignment"
+                             OnRemove="@OnRemoveAssignment" />
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+@code {
+    [Parameter] public PlayerEditDto Model { get; set; } = new();
+    [Parameter] public List<SportDiscipline> Disciplines { get; set; } = [];
+    [Parameter] public List<CountryDto> Countries { get; set; } = [];
+    [Parameter] public List<PlayerTeamAssignmentDto> Assignments { get; set; } = [];
+    [Parameter] public List<TeamDto> AllTeams { get; set; } = [];
+    [Parameter] public List<FieldPosition> FieldPositions { get; set; } = [];
+    
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<PlayerEditDto> OnSubmit { get; set; }
+    [Parameter] public EventCallback<PlayerTeamAssignmentDto> OnSaveAssignment { get; set; }
+    [Parameter] public EventCallback<Guid> OnRemoveAssignment { get; set; }
+
+    private List<dynamic> GenderOptions => new List<dynamic>
+    {
+        new { Text = L["Male"], Value = 0 },
+        new { Text = L["Female"], Value = 1 },
+        new { Text = L["Other"], Value = 2 }
+    };
+
+    private void OnDisciplineChanged(object value)
+    {
+        // Re-load teams/positions if needed
+    }
+}

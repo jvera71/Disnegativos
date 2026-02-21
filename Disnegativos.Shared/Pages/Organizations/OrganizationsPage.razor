@@ -1,0 +1,31 @@
+@page "/clubs"
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenBreadCrumb class="rz-mb-4">
+            <RadzenBreadCrumbItem Path="/" Icon="home" />
+            <RadzenBreadCrumbItem Text="@L["Clubs"]" />
+        </RadzenBreadCrumb>
+
+        <RadzenCard class="rz-shadow-3">
+            @if (!_isEditing)
+            {
+                <OrganizationListView Data="@_organizations" 
+                                     IsLoading="@_isLoading" 
+                                     OnAdd="@HandleAdd" 
+                                     OnEdit="@HandleEditAsync" 
+                                     OnDelete="@HandleDeleteAsync" />
+            }
+            else
+            {
+                <OrganizationEditView Model="@_editingOrganization" 
+                                     Disciplines="@_disciplines"
+                                     Countries="@_countries"
+                                     OnCancel="@HandleCancel" 
+                                     OnSubmit="@HandleSaveAsync" />
+            }
+        </RadzenCard>
+    </ChildContent>
+</RadzenContent>

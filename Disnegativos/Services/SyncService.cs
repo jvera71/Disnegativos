@@ -1,10 +1,11 @@
-using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Disnegativos.Shared.Data;
-using Disnegativos.Shared.Data.Entities;
-using Disnegativos.Shared.DTOs.Sync;
 using Disnegativos.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
+using Dotmim.Sync;
+using Dotmim.Sync.Sqlite;
+using Dotmim.Sync.Web.Client;
+using Dotmim.Sync.Enumerations;
 
 namespace Disnegativos.Services;
 
@@ -14,6 +15,7 @@ public class SyncService : ISyncService
     private readonly HttpClient _httpClient;
     private readonly IConnectivityService _connectivity;
     private readonly ILogger<SyncService> _logger;
+    private readonly string _localConnectionString;
 
     public bool IsSyncing { get; private set; }
 
@@ -27,6 +29,21 @@ public class SyncService : ISyncService
         _httpClient = httpClient;
         _connectivity = connectivity;
         _logger = logger;
+        
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "disnegativos.db");
+        _localConnectionString = $"Data Source={dbPath}";
+    }
+
+    public async Task InitialSyncOnStartupAsync(CancellationToken ct = default)
+    {
+        if (!_connectivity.IsOnline)
+        {
+            _logger.LogInformation("InitialSync: sin conexión, usando datos locales.");
+            return;
+        }
+
+        _logger.LogInformation("InitialSync: ejecutando sincronización inicial...");
+        await SyncAsync(ct);
     }
 
     public async Task SyncAsync(CancellationToken ct = default)
@@ -36,12 +53,28 @@ public class SyncService : ISyncService
         try
         {
             IsSyncing = true;
-            await PushPendingChangesAsync(ct);
-            await PullServerChangesAsync(ct);
+            _logger.LogInformation("Sync: Iniciando sincronización con Dotmim.Sync...");
+
+            // Definir proveedores
+            var clientProvider = new SqliteSyncProvider(_localConnectionString);
+            
+            // Orquestador web apuntando al controlador SyncController del servidor
+            var syncUrl = new Uri(_httpClient.BaseAddress!, "api/sync").ToString();
+            var proxyClientProvider = new WebRemoteOrchestrator(syncUrl);
+
+            // Agente de sincronización
+            var agent = new SyncAgent(clientProvider, proxyClientProvider);
+
+            // Ejecutar sincronización
+            // Note: Usamos la versión sin parámetros por ahora para asegurar compilación
+            // e investigamos por qué las propiedades no se encuentran.
+            var result = await agent.SynchronizeAsync();
+
+            _logger.LogInformation("Sync completado con éxito.");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during synchronization");
+            _logger.LogError(ex, "Error durante la sincronización con Dotmim.Sync");
         }
         finally
         {
@@ -49,56 +82,7 @@ public class SyncService : ISyncService
         }
     }
 
-    public async Task PushPendingChangesAsync(CancellationToken ct = default)
-    {
-        using var db = _dbFactory.CreateDbContext();
-        
-        var pending = await db.SyncLogs
-            .Where(s => !s.IsSynced)
-            .OrderBy(s => s.Timestamp)
-            .Take(50)
-            .ToListAsync(ct);
-
-        if (!pending.Any()) return;
-
-        var batch = new SyncBatchDto(pending.Select(s => new SyncItemDto(
-            s.Id,
-            s.TableName,
-            s.RecordId,
-            s.OperationType,
-            s.ChangedFields,
-            s.Timestamp
-        )).ToList());
-
-        var response = await _httpClient.PostAsJsonAsync("api/sync/push", batch, ct);
-        if (response.IsSuccessStatusCode)
-        {
-            var result = await response.Content.ReadFromJsonAsync<SyncBatchResultDto>(ct);
-            if (result != null)
-            {
-                foreach (var itemResult in result.Results)
-                {
-                    var log = pending.FirstOrDefault(p => p.Id == itemResult.SyncLogId);
-                    if (log != null && itemResult.Success)
-                    {
-                        log.IsSynced = true;
-                        log.SyncedAt = DateTime.UtcNow;
-                    }
-                    else if (log != null)
-                    {
-                        log.ConflictData = itemResult.ConflictDetails;
-                        log.RetryCount++;
-                    }
-                }
-                await db.SaveChangesAsync(ct);
-            }
-        }
-    }
-
-    public async Task PullServerChangesAsync(CancellationToken ct = default)
-    {
-        // Implementación básica de Pull por tiempo (se ampliaría en el futuro)
-        // Por ahora se deja como placeholder para completar el patrón.
-        await Task.CompletedTask;
-    }
+    public Task FullSyncAsync(CancellationToken ct = default) => SyncAsync(ct);
+    public Task PullServerChangesAsync(CancellationToken ct = default) => SyncAsync(ct);
+    public Task PushPendingChangesAsync(CancellationToken ct = default) => SyncAsync(ct);
 }

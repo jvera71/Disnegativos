@@ -1,0 +1,41 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H5" class="rz-m-0">@L["Players"]</RadzenText>
+        <RadzenButton Icon="person_add" Text="@L["AddPlayer"]" Click="@OnAdd" ButtonStyle="ButtonStyle.Primary" />
+    </RadzenStack>
+
+    <RadzenDataGrid Data="@Data" TItem="PlayerDto" AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="10" 
+                    IsLoading="@IsLoading" EmptyText="@L["NoDataFound"]">
+        <Columns>
+            <RadzenDataGridColumn TItem="PlayerDto" Property="FirstName" Title="@L["FirstName"]" />
+            <RadzenDataGridColumn TItem="PlayerDto" Property="LastName" Title="@L["LastName"]" />
+            <RadzenDataGridColumn TItem="PlayerDto" Property="Nickname" Title="@L["Nickname"]" />
+            <RadzenDataGridColumn TItem="PlayerDto" Property="Email" Title="@L["Email"]" />
+            <RadzenDataGridColumn TItem="PlayerDto" Property="IsActive" Title="@L["Active"]" Width="80px" TextAlign="TextAlign.Center">
+                <Template Context="player">
+                    <RadzenIcon Icon="@(player.IsActive ? "check_circle" : "cancel")" 
+                                IconColor="@(player.IsActive ? "var(--rz-success)" : "var(--rz-danger)")" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PlayerDto" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                <Template Context="player">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@(() => OnEdit.InvokeAsync(player.Id))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" class="rz-ml-2" 
+                                  Click="@(() => OnDelete.InvokeAsync(player.Id))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter] public List<PlayerDto> Data { get; set; } = [];
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback<Guid> OnEdit { get; set; }
+    [Parameter] public EventCallback<Guid> OnDelete { get; set; }
+}

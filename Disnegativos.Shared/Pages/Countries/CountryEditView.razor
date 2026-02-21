@@ -1,0 +1,53 @@
+@using Disnegativos.Shared.DTOs
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenTemplateForm TItem="CountryEditDto" Data="@Model" Submit="@((CountryEditDto args) => OnSave.InvokeAsync(args))">
+    <RadzenStack Gap="1rem">
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["ISO_Code"]" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value="@Model.IsoCode" Name="IsoCode" />
+                    <RadzenRequiredValidator Component="IsoCode" Text="@L["Required"]" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Language"]" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value="@Model.LanguageCode" Name="LanguageCode" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Name_Key"]" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value="@Model.NameKey" Name="NameKey" />
+                    <RadzenRequiredValidator Component="NameKey" Text="@L["Required"]" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Nationality_Key"]" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value="@Model.NationalityKey" Name="NationalityKey" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["SortOrder"]" Style="width: 100%;">
+                    <RadzenNumeric @bind-Value="@Model.SortOrder" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="@L["Save"]" Icon="save" ButtonStyle="ButtonStyle.Primary" />
+            <RadzenButton Text="@L["Cancel"]" Icon="cancel" ButtonStyle="ButtonStyle.Light" Click="@OnCancel" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public CountryEditDto Model { get; set; } = new();
+    [Parameter] public EventCallback<CountryEditDto> OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+}

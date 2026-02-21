@@ -1,0 +1,19 @@
+@page "/countries"
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Services.Interfaces
+@inject ICountryService CountryService
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+@inject IStringLocalizer<SharedResources> L
+@inject HubConnection HubConnection
+
+<RadzenCard>
+    @if (_isEditing)
+    {
+        <CountryEditView Model="@_editingCountry" OnSave="@HandleSaveAsync" OnCancel="@HandleCancel" />
+    }
+    else
+    {
+        <CountryListView Countries="@_countries" IsLoading="@_isLoading" OnAdd="@HandleAdd" OnEdit="@HandleEditAsync" OnDelete="@HandleDeleteAsync" />
+    }
+</RadzenCard>

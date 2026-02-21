@@ -12,7 +12,11 @@ namespace Disnegativos.Shared.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDisnegativosSharedServices(this IServiceCollection services, string connectionString, string? hubUrl = null)
+    public static IServiceCollection AddDisnegativosSharedServices(
+        this IServiceCollection services,
+        string connectionString,
+        string? hubUrl = null,
+        bool isServer = false)   // true → Web, false → MAUI
     {
         // 1. Radzen Components
         services.AddRadzenComponents();
@@ -30,7 +34,15 @@ public static class ServiceCollectionExtensions
         // 4. IEventService
         services.AddScoped<IEventService, EventService>();
 
-        // 5. Localization Services
+        // 5. ICountryService
+        services.AddScoped<ICountryService, CountryService>();
+        services.AddScoped<IRefereeService, RefereeService>();
+        services.AddScoped<ICompetitionService, CompetitionService>();
+        services.AddScoped<IOrganizationService, OrganizationService>();
+        services.AddScoped<ITeamService, TeamService>();
+        services.AddScoped<IPlayerService, PlayerService>();
+
+        // 7. Localization Services
         services.AddLocalization();
 
         // 6. HubConnection Client (SignalR)

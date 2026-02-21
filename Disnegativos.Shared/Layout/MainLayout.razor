@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.Extensions.DependencyInjection
+@inject IStringLocalizer<SharedResources> L
+@inject IServiceProvider ServiceProvider
 
 <div class="page">
     <div class="sidebar">
@@ -7,6 +10,20 @@
 
     <main>
         <div class="top-row px-4">
+            @if (_syncMessage != null)
+            {
+                <span class="sync-status @(_syncCompleted ? "sync-done" : "sync-pending")">
+                    @if (!_syncCompleted)
+                    {
+                        <span class="sync-spinner">⟳</span>
+                    }
+                    else
+                    {
+                        <span>✓</span>
+                    }
+                    &nbsp;@_syncMessage
+                </span>
+            }
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
@@ -23,3 +40,31 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private string? _syncMessage;
+    private bool _syncCompleted;
+    private Disnegativos.Shared.Interfaces.ISyncStatusNotifier? _notifier;
+
+    protected override void OnInitialized()
+    {
+        // ISyncStatusNotifier solo está registrado en MAUI, no en Web → null en Web es normal
+        _notifier = ServiceProvider.GetService<Disnegativos.Shared.Interfaces.ISyncStatusNotifier>();
+        if (_notifier != null)
+            _notifier.StatusChanged += OnSyncStatusChanged;
+    }
+
+    private async void OnSyncStatusChanged(object? sender, Disnegativos.Shared.Interfaces.SyncStatusEventArgs args)
+    {
+        _syncMessage = args.Message;
+        _syncCompleted = args.Completed;
+        await InvokeAsync(StateHasChanged);
+
+        if (args.Completed)
+        {
+            await Task.Delay(4000);
+            _syncMessage = null;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

@@ -1,0 +1,106 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Data.Entities
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenTemplateForm TItem="OrganizationEditDto" Data="@Model" Submit="@OnSubmit">
+    <RadzenStack Gap="1rem">
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="8">
+                <RadzenFormField Text="@L["Name"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Name" Name="Name" class="rz-w-100" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="Name" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["Discipline"]" class="rz-w-100">
+                    <RadzenDropDown @bind-Value="Model.SportDisciplineId" Data="@Disciplines" TextProperty="NameKey" ValueProperty="Id" 
+                                    class="rz-w-100" Name="Discipline" />
+                </RadzenFormField>
+                <RadzenRequiredValidator Component="Discipline" Text="@L["RequiredField"]" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Address"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Address" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["ExtendedAddress"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.ExtendedAddress" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["City"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.City" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["Province"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Province" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["PostalCode"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.PostalCode" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenFormField Text="@L["Country"]" class="rz-w-100">
+                    <RadzenDropDown @bind-Value="Model.CountryId" Data="@Countries" TextProperty="NameKey" ValueProperty="Id" 
+                                    AllowClear="true" class="rz-w-100" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains" AllowFiltering="true" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-h-100">
+                    <RadzenCheckBox @bind-Value="Model.IsActive" Name="IsActive" />
+                    <RadzenLabel Text="@L["Active"]" Component="IsActive" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["Email"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Email" Name="Email" class="rz-w-100" />
+                </RadzenFormField>
+                <RadzenEmailValidator Component="Email" Text="@L["InvalidEmail"]" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["Phone"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Phone" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="@L["Website"]" class="rz-w-100">
+                    <RadzenTextBox @bind-Value="Model.Website" class="rz-w-100" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenFormField Text="@L["Notes"]" class="rz-w-100">
+            <RadzenTextArea @bind-Value="Model.Notes" Rows="3" class="rz-w-100" />
+        </RadzenFormField>
+
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem" class="rz-mt-4">
+            <RadzenButton ButtonType="ButtonType.Button" Text="@L["Cancel"]" ButtonStyle="ButtonStyle.Light" Click="@OnCancel" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="@L["Save"]" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public OrganizationEditDto Model { get; set; } = new();
+    [Parameter] public List<SportDiscipline> Disciplines { get; set; } = [];
+    [Parameter] public List<CountryDto> Countries { get; set; } = [];
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<OrganizationEditDto> OnSubmit { get; set; }
+}

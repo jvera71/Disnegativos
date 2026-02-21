@@ -78,4 +78,256 @@
   <data name="HomeTeamRequired" xml:space="preserve">
     <value>Debe especificar el equipo local.</value>
   </data>
+  <data name="Countries" xml:space="preserve">
+    <value>Países</value>
+  </data>
+  <data name="AddCountry" xml:space="preserve">
+    <value>Añadir País</value>
+  </data>
+  <data name="ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Nationality" xml:space="preserve">
+    <value>Nacionalidad</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Orden</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="ISO_Code" xml:space="preserve">
+    <value>Código ISO</value>
+  </data>
+  <data name="Name_Key" xml:space="preserve">
+    <value>Clave de Nombre</value>
+  </data>
+  <data name="Nationality_Key" xml:space="preserve">
+    <value>Clave de Nacionalidad</value>
+  </data>
+  <data name="SortOrder" xml:space="preserve">
+    <value>Orden de Clasificación</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Requerido</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Éxito</value>
+  </data>
+  <data name="SavedSuccessfully" xml:space="preserve">
+    <value>Guardado correctamente.</value>
+  </data>
+  <data name="DeletedSuccessfully" xml:space="preserve">
+    <value>Eliminado correctamente.</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>¿Estás seguro?</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DataUpdated" xml:space="preserve">
+    <value>Datos Actualizados</value>
+  </data>
+  <data name="CountryUpdatedByAnotherUser" xml:space="preserve">
+    <value>Un país ha sido actualizado por otro usuario.</value>
+  </data>
+  <data name="Referees" xml:space="preserve">
+    <value>Árbitros</value>
+  </data>
+  <data name="AddReferee" xml:space="preserve">
+    <value>Añadir Árbitro</value>
+  </data>
+  <data name="LicenseNumber" xml:space="preserve">
+    <value>Nº de Licencia</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Teléfono</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Apellidos</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="RequiredField" xml:space="preserve">
+    <value>Campo obligatorio</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Email inválido</value>
+  </data>
+  <data name="RefereeUpdatedByAnotherUser" xml:space="preserve">
+    <value>Un árbitro ha sido actualizado por otro usuario.</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>País</value>
+  </data>
+  <data name="NoDataFound" xml:space="preserve">
+    <value>No se han encontrado datos</value>
+  </data>
+  <data name="Competitions" xml:space="preserve">
+    <value>Competiciones</value>
+  </data>
+  <data name="AddCompetition" xml:space="preserve">
+    <value>Añadir Competición</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Título</value>
+  </data>
+  <data name="Discipline" xml:space="preserve">
+    <value>Disciplina</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Fecha de Inicio</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Fecha de Fin</value>
+  </data>
+  <data name="CompetitionUpdatedByAnotherUser" xml:space="preserve">
+    <value>Una competición ha sido actualizada por otro usuario.</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Privada</value>
+  </data>
+  <data name="ShowInCalendar" xml:space="preserve">
+    <value>Mostrar en Calendario</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Clubs" xml:space="preserve">
+    <value>Clubes</value>
+  </data>
+  <data name="AddClub" xml:space="preserve">
+    <value>Añadir Club</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Dirección</value>
+  </data>
+  <data name="ExtendedAddress" xml:space="preserve">
+    <value>Dirección Ampliada</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Ciudad</value>
+  </data>
+  <data name="Province" xml:space="preserve">
+    <value>Provincia</value>
+  </data>
+  <data name="PostalCode" xml:space="preserve">
+    <value>Código Postal</value>
+  </data>
+  <data name="ClubUpdatedByAnotherUser" xml:space="preserve">
+    <value>Un club ha sido actualizado por otro usuario.</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Sitio Web</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notas</value>
+  </data>
+  <data name="Teams" xml:space="preserve">
+    <value>Equipos</value>
+  </data>
+  <data name="AddTeam" xml:space="preserve">
+    <value>Añadir Equipo</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Alias</value>
+  </data>
+  <data name="ActivationDate" xml:space="preserve">
+    <value>Fecha de Activación</value>
+  </data>
+  <data name="Roster" xml:space="preserve">
+    <value>Plantilla</value>
+  </data>
+  <data name="AddPlayerToTeam" xml:space="preserve">
+    <value>Añadir Jugador al Equipo</value>
+  </data>
+  <data name="Player" xml:space="preserve">
+    <value>Jugador</value>
+  </data>
+  <data name="Jersey" xml:space="preserve">
+    <value>Dorsal</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Posición</value>
+  </data>
+  <data name="EditPlayerAssignment" xml:space="preserve">
+    <value>Editar Asignación de Jugador</value>
+  </data>
+  <data name="GeneralInfo" xml:space="preserve">
+    <value>Información General</value>
+  </data>
+  <data name="TeamUpdatedByAnotherUser" xml:space="preserve">
+    <value>Un equipo o su plantilla han sido actualizados por otro usuario.</value>
+  </data>
+  <data name="Players" xml:space="preserve">
+    <value>Jugadores</value>
+  </data>
+  <data name="AddPlayer" xml:space="preserve">
+    <value>Añadir Jugador</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Apellidos</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Fecha de Nacimiento</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Género</value>
+  </data>
+  <data name="AssignedTeams" xml:space="preserve">
+    <value>Equipos Asignados</value>
+  </data>
+  <data name="AssignToTeam" xml:space="preserve">
+    <value>Asignar a Equipo</value>
+  </data>
+  <data name="EditTeamAssignment" xml:space="preserve">
+    <value>Editar Asignación de Equipo</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Masculino</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Femenino</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="PlayerUpdatedByAnotherUser" xml:space="preserve">
+    <value>Un jugador o sus asignaciones han sido actualizados por otro usuario.</value>
+  </data>
+  <data name="PreferredFoot" xml:space="preserve">
+    <value>Pie Dominante</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Altura</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Peso</value>
+  </data>
 </root>

@@ -1,0 +1,30 @@
+@page "/referees"
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenBreadCrumb class="rz-mb-4">
+            <RadzenBreadCrumbItem Path="/" Icon="home" />
+            <RadzenBreadCrumbItem Text="@L["Referees"]" />
+        </RadzenBreadCrumb>
+
+        <RadzenCard class="rz-shadow-3">
+            @if (!_isEditing)
+            {
+                <RefereeListView Data="@_referees" 
+                                IsLoading="@_isLoading" 
+                                OnAdd="@HandleAdd" 
+                                OnEdit="@HandleEditAsync" 
+                                OnDelete="@HandleDeleteAsync" />
+            }
+            else
+            {
+                <RefereeEditView Model="@_editingReferee" 
+                                Countries="@_countries"
+                                OnCancel="@HandleCancel" 
+                                OnSubmit="@HandleSaveAsync" />
+            }
+        </RadzenCard>
+    </ChildContent>
+</RadzenContent>

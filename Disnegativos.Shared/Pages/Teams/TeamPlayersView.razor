@@ -1,0 +1,94 @@
+@using Disnegativos.Shared.DTOs
+@using Disnegativos.Shared.Data.Entities
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+@inject DialogService DialogService
+
+<RadzenStack Gap="1rem">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenText TextStyle="TextStyle.H6" class="rz-m-0">@L["Roster"]</RadzenText>
+        <RadzenButton Icon="person_add" Text="@L["AddPlayerToTeam"]" Click="@OnAddPlayer" ButtonStyle="ButtonStyle.Secondary" Size="ButtonSize.Small" />
+    </RadzenStack>
+
+    <RadzenDataGrid @ref="_grid" Data="@Data" TItem="TeamPlayerDto" AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="5">
+        <Columns>
+            <RadzenDataGridColumn TItem="TeamPlayerDto" Property="PlayerFullName" Title="@L["Player"]" />
+            <RadzenDataGridColumn TItem="TeamPlayerDto" Property="JerseyNumber" Title="@L["Jersey"]" Width="100px" />
+            <RadzenDataGridColumn TItem="TeamPlayerDto" Property="FieldPositionName" Title="@L["Position"]" />
+            <RadzenDataGridColumn TItem="TeamPlayerDto" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="120px">
+                <Template Context="tp">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Click="@(() => OnEditPlayer(tp))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" class="rz-ml-2" 
+                                  Click="@(() => OnDeletePlayer(tp))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+@code {
+    [Parameter] public Guid TeamId { get; set; }
+    [Parameter] public List<TeamPlayerDto> Data { get; set; } = [];
+    [Parameter] public List<PlayerDto> AvailablePlayers { get; set; } = [];
+    [Parameter] public List<FieldPosition> FieldPositions { get; set; } = [];
+    [Parameter] public EventCallback<TeamPlayerDto> OnSavePlayer { get; set; }
+    [Parameter] public EventCallback<Guid> OnRemovePlayer { get; set; }
+
+    private RadzenDataGrid<TeamPlayerDto> _grid = default!;
+
+    private async Task OnAddPlayer()
+    {
+        var newTp = new TeamPlayerDto { TeamId = TeamId, Id = Guid.NewGuid() };
+        await ShowEditDialog(newTp, true);
+    }
+
+    private async Task OnEditPlayer(TeamPlayerDto tp)
+    {
+        await ShowEditDialog(tp, false);
+    }
+
+    private async Task ShowEditDialog(TeamPlayerDto tp, bool isNew)
+    {
+        var result = await DialogService.OpenAsync(L["EditPlayerAssignment"], ds => 
+            @<RadzenStack Gap="1rem">
+                <RadzenFormField Text="@L["Player"]">
+                    <RadzenDropDown @bind-Value="tp.PlayerId" Data="@AvailablePlayers" TextProperty="FullName" ValueProperty="Id" 
+                                    class="rz-w-100" Disabled="@(!isNew)" AllowFiltering="true" />
+                </RadzenFormField>
+                <RadzenRow>
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@L["Jersey"]">
+                            <RadzenTextBox @bind-Value="tp.JerseyNumber" class="rz-w-100" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="6">
+                        <RadzenFormField Text="@L["Position"]">
+                            <RadzenDropDown @bind-Value="tp.FieldPositionId" Data="@FieldPositions" TextProperty="Name" ValueProperty="Id" 
+                                            class="rz-w-100" AllowClear="true" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="1rem">
+                    <RadzenButton Text="@L["Cancel"]" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                    <RadzenButton Text="@L["Save"]" Click="() => ds.Close(true)" ButtonStyle="ButtonStyle.Primary" />
+                </RadzenStack>
+            </RadzenStack>
+        );
+
+        if (result == true)
+        {
+            await OnSavePlayer.InvokeAsync(tp);
+            await _grid.Reload();
+        }
+    }
+
+    private async Task OnDeletePlayer(TeamPlayerDto tp)
+    {
+        var confirm = await DialogService.Confirm(L["AreYouSure"], L["Delete"], new ConfirmOptions { OkButtonText = L["Yes"], CancelButtonText = L["No"] });
+        if (confirm == true)
+        {
+            await OnRemovePlayer.InvokeAsync(tp.Id);
+            await _grid.Reload();
+        }
+    }
+}

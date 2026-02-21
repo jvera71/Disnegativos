@@ -1,0 +1,36 @@
+@page "/players"
+@using Disnegativos.Shared.Resources
+@inject IStringLocalizer<SharedResources> L
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenBreadCrumb class="rz-mb-4">
+            <RadzenBreadCrumbItem Path="/" Icon="home" />
+            <RadzenBreadCrumbItem Text="@L["Players"]" />
+        </RadzenBreadCrumb>
+
+        <RadzenCard class="rz-shadow-3">
+            @if (!_isEditing)
+            {
+                <PlayerListView Data="@_players" 
+                              IsLoading="@_isLoading" 
+                              OnAdd="@HandleAdd" 
+                              OnEdit="@HandleEditAsync" 
+                              OnDelete="@HandleDeleteAsync" />
+            }
+            else
+            {
+                <PlayerEditView Model="@_editingPlayer" 
+                              Disciplines="@_disciplines"
+                              Countries="@_countries"
+                              Assignments="@_assignments"
+                              AllTeams="@_allTeams"
+                              FieldPositions="@_fieldPositions"
+                              OnCancel="@HandleCancel" 
+                              OnSubmit="@HandleSaveAsync"
+                              OnSaveAssignment="@HandleSaveAssignmentAsync"
+                              OnRemoveAssignment="@HandleRemoveAssignmentAsync" />
+            }
+        </RadzenCard>
+    </ChildContent>
+</RadzenContent>
